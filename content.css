@@ -1,0 +1,19 @@
+body {
+	background: hotpink;
+}
+
+.listing-cards-tabular {
+	background: hotpink;
+}
+
+.cardsx {
+	background: red !important;
+}
+
+.missing-primary {
+	background: #FF6666 !important;
+}
+
+.missing-secondary {
+	background: orange !important;	
+}

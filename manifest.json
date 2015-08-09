@@ -1,0 +1,16 @@
+{
+		"manifest_version": 2,
+		"name": "Hearthpwn Collection",
+		"version": "0.1.0",
+		"description": "Hearthpwn collection checker",
+		"author": "Robert Hart",
+		"content_scripts": [
+			{
+				"matches": ["*://*/*"],
+				"js": ["jquery-2.1.4.js", "content.js"],
+				"css": ["content.css"],
+				"run_at": "document_end"
+			}
+		],
+		"permissions": ["tabs"]
+}
