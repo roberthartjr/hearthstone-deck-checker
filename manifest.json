@@ -12,5 +12,6 @@
 				"run_at": "document_end"
 			}
 		],
-		"permissions": ["tabs"]
+		"permissions": ["tabs", "storage"],
+		"web_accessible_resources" : ["*.json"]
 }

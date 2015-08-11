@@ -5,10 +5,53 @@
 
 	var firstHref = $("a[href^='http']").eq(0).attr("href");
 
-	var cards = [{name:"Druid of the Claw", num:2, index:0}];
-	cards.push({name:"Ancient of Lore", num:1, index:1});
+	// var cards = [{name:"Druid of the Claw", num:2, index:0}];
+	// cards.push({name:"Ancient of Lore", num:1, index:1});
+	var mycollection = [2,1];
+	//mycollection = [{num:2}, {num:1}];
+
+	var cards;
+	var myurl = chrome.extension.getURL("carddata.json");
+	$.ajax({
+		url: myurl,
+		datatype: "json",
+		async: false,
+		success: function(data) {
+			cards = $.parseJSON(data);
+			//alert(cards);
+		}
+	});
+
+	//alert(cards);
 
 	var Rarity = {COMMON:1, RARE:2, EPIC:3, LEGENDARY:4};
+
+	//var savedstuff = [];
+
+	// for(var x=0; x<1000; x++)
+	// {
+	// 	savedstuff.push(x);
+	// }
+
+	// chrome.storage.local.set({"hscollection": savedstuff}, function() {
+	// 	alert("saved");
+	// } );
+
+	//localStorage.setItem("hscollection", JSON.stringify(savedstuff));
+
+
+	var savedstuff;
+
+	chrome.storage.local.get("hscollection", function(data) {
+		savedstuff = data.hscollection;
+		alert(savedstuff);
+	});
+
+
+	//alert(savedstuff);
+
+	// var savedstuff = JSON.parse(localStorage.getItem("hscollection"));
+	// alert(savedstuff);
 
 
 	//console.log(firstHref);
@@ -120,10 +163,23 @@ $("tr").has("td.col-name a:not(.set-2)[class*='rarity']").each(function() {
 		//alert(cardname.toUpperCase());
 		if(cards[cardindex].name.toUpperCase() == cardname.toUpperCase())
 		{
-			cardfound = true;
 			//alert(cardname);
+			var num = 0;
 
-			if(cards[cardindex].num < numcards)
+			// for(var x=0; x<mycollection.length; x++)
+			// {
+			// 	if(cards[cardindex].cardpos == mycollection[x] )
+			// 	{
+			// 		num++;
+			// 		cardfound = true;
+			// 		//alert(num);
+			// 	}
+			// }
+
+			num = mycollection[cardindex];
+			cardfound = true;
+
+			if(num > 0 && num < numcards)
 			{
 				$(this).find("td.col-name").addClass("missing-secondary");
 				$(this).find("td.col-cost").addClass("missing-secondary");
