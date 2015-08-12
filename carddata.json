@@ -1,4 +1,4 @@
 [
-	{"name":"Druid of the Claw"},
-	{"name":"Ancient of Lore"}
+	{"name":"Druid of the Claw", "rarity":1, "set":3},
+	{"name":"Ancient of Lore", "rarity":3, "set":3}
 ]

@@ -7,11 +7,11 @@
 
 	// var cards = [{name:"Druid of the Claw", num:2, index:0}];
 	// cards.push({name:"Ancient of Lore", num:1, index:1});
-	var mycollection = [2,1];
+	var mycollection = [2,1,2];
 	//mycollection = [{num:2}, {num:1}];
 
 	var cards;
-	var myurl = chrome.extension.getURL("carddata.json");
+	var myurl = chrome.extension.getURL("carddata2.json");
 	$.ajax({
 		url: myurl,
 		datatype: "json",
@@ -25,6 +25,8 @@
 	//alert(cards);
 
 	var Rarity = {COMMON:1, RARE:2, EPIC:3, LEGENDARY:4};
+	var Set = {CLASSIC:1, NAXX:2, GVG:3, BRM:4};
+	var playerClasses = {DRUID:1, HUNTER:2, MAGE:3, PALADIN:4, PRIEST:5, ROGUE:6, SHAMAN:7, WARLOCK:8, WARRIOR:9, NEUTRAL:10};
 
 	//var savedstuff = [];
 
@@ -39,12 +41,19 @@
 
 	//localStorage.setItem("hscollection", JSON.stringify(savedstuff));
 
+	chrome.storage.local.remove("hscollection");
 
-	var savedstuff;
+	var savedstuff = "";
 
 	chrome.storage.local.get("hscollection", function(data) {
-		savedstuff = data.hscollection;
-		alert(savedstuff);
+		
+
+		if(typeof chrome.runtime.lastError !== "undefined")
+		{
+			savedstuff = data.hscollection;
+			//alert("savedstuff");
+			alert(savedstuff);
+		}
 	});
 
 
@@ -176,8 +185,14 @@ $("tr").has("td.col-name a:not(.set-2)[class*='rarity']").each(function() {
 			// 	}
 			// }
 
-			num = mycollection[cardindex];
-			cardfound = true;
+			//alert(mycollection[cardindex]);
+			//alert(cardname);
+
+			if(typeof mycollection[cardindex] !== "undefined")
+			{
+				num = mycollection[cardindex];
+				cardfound = true;
+			}
 
 			if(num > 0 && num < numcards)
 			{
