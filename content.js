@@ -24,10 +24,7 @@
 
 	//alert(cards);
 
-	var Rarity = {COMMON:1, RARE:2, EPIC:3, LEGENDARY:4};
-	var Set = {CLASSIC:1, NAXX:2, GVG:3, BRM:4};
-	var playerClasses = {DRUID:1, HUNTER:2, MAGE:3, PALADIN:4, PRIEST:5, ROGUE:6, SHAMAN:7, WARLOCK:8, WARRIOR:9, NEUTRAL:10};
-
+	alert("Rarity:" + Rarity.COMMON);
 	//var savedstuff = [];
 
 	// for(var x=0; x<1000; x++)
@@ -47,6 +44,8 @@
 
 	chrome.storage.local.get("hscollection", function(data) {
 		
+		savedstuff = data;
+		alert(savedstuff);
 
 		if(typeof chrome.runtime.lastError !== "undefined")
 		{
@@ -166,8 +165,9 @@ $("tr").has("td.col-name a:not(.set-2)[class*='rarity']").each(function() {
 	}
 
 	var cardfound = false;
-	for(var cardindex in cards)
+	for(var cardindex = 0; cardindex < cards.length; cardindex++)
 	{
+		//alert("cardindex: " + cardindex);
 		//alert(cards[cardindex].name.toUpperCase());
 		//alert(cardname.toUpperCase());
 		if(cards[cardindex].name.toUpperCase() == cardname.toUpperCase())

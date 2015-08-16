@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Test Extension Options</title>
+  <script src="jquery-2.1.4.js"></script>
+  <script src="functions.js"></script>
+  <script src="options.js"></script>
+  <style>
+    body: { padding: 10px; }
+  </style>
+</head>
+
+<body>
+	<div>
+		<label for"cardsets">Set: </label>
+		<select id="cardsets">
+			<option value="1">Classic</option>
+			<option value="2">Naxxramas</option>
+			<option value="3">Goblins vs Gnomes</option>
+			<option value="4">Blackrock Mountain</option>
+		</select>
+	</div>
+
+	<br/>
+
+	<div>
+		<label for="cardclasses">Class: </label>
+		<select id="cardclasses">
+			<option value="0">Choose a class</option>
+			<option value="1">Druid</option>
+			<option value="2">Hunter</option>
+			<option value="3">Mage</option>
+			<option value="4">Paladin</option>
+			<option value="5">Priest</option>
+			<option value="6">Rogue</option>
+			<option value="7">Shaman</option>
+			<option value="8">Warlock</option>
+			<option value="9">Warrior</option>
+			<option value="10">Neutral</option>
+		</select>
+	</div>
+
+	<div id="collectionview">
+	</div>
+</body>
+</html>

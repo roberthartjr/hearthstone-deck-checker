@@ -7,11 +7,16 @@
 		"content_scripts": [
 			{
 				"matches": ["*://*/*"],
-				"js": ["jquery-2.1.4.js", "content.js"],
+				"js": ["jquery-2.1.4.js", "functions.js","content.js"],
 				"css": ["content.css"],
 				"run_at": "document_end"
 			}
 		],
 		"permissions": ["tabs", "storage"],
-		"web_accessible_resources" : ["*.json"]
+		"web_accessible_resources" : ["*.json"],
+		"options_ui": 
+		{
+			"page": "options.html",
+			"chrome_style": true
+		}
 }
