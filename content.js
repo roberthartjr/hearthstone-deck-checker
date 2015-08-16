@@ -47,7 +47,7 @@
 		savedstuff = data;
 		alert(savedstuff);
 
-		if(typeof chrome.runtime.lastError !== "undefined")
+		if(typeof data.hscollection !== "undefined")
 		{
 			savedstuff = data.hscollection;
 			//alert("savedstuff");
