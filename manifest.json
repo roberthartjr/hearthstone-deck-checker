@@ -13,7 +13,7 @@
 			}
 		],
 		"permissions": ["tabs", "storage"],
-		"web_accessible_resources" : ["*.json"],
+		"web_accessible_resources" : ["*.json", "options.html"],
 		"options_ui": 
 		{
 			"page": "options.html",

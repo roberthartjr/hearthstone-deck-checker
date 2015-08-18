@@ -1,13 +1,9 @@
 (function() {
 	'use strict';
 
-	console.log("Hello from the content script!");
-
-	var firstHref = $("a[href^='http']").eq(0).attr("href");
-
 	// var cards = [{name:"Druid of the Claw", num:2, index:0}];
 	// cards.push({name:"Ancient of Lore", num:1, index:1});
-	var mycollection = [2,1,2];
+	var mycollection = [];
 	//mycollection = [{num:2}, {num:1}];
 
 	var cards;
@@ -24,7 +20,7 @@
 
 	//alert(cards);
 
-	alert("Rarity:" + Rarity.COMMON);
+	//alert("Rarity:" + Rarity.COMMON);
 	//var savedstuff = [];
 
 	// for(var x=0; x<1000; x++)
@@ -38,21 +34,48 @@
 
 	//localStorage.setItem("hscollection", JSON.stringify(savedstuff));
 
-	chrome.storage.local.remove("hscollection");
+	//chrome.storage.local.remove("hscollection");
 
-	var savedstuff = "";
+	//var savedstuff = "";
 
 	chrome.storage.local.get("hscollection", function(data) {
 		
-		savedstuff = data;
-		alert(savedstuff);
+		//savedstuff = data;
+		//alert(savedstuff);
 
 		if(typeof data.hscollection !== "undefined")
 		{
-			savedstuff = data.hscollection;
+			mycollection = data.hscollection;
+			//alert(mycollection);
 			//alert("savedstuff");
-			alert(savedstuff);
+			//alert(savedstuff);
 		}
+		else
+		{
+
+			for(var x=0; x<cards.length; x++)
+			{
+				mycollection.push(0);
+				//console.log("error");
+
+				chrome.storage.local.set({"hscollection": mycollection}, function() {
+					console.log("mycollection created and saved");
+				});
+			}
+
+
+			if(chrome.runtime.openOptionsPage)
+			{
+				chrome.runtime.openOptionsPage();
+			}
+			else
+			{
+				window.open(chrome.runtime.getURL("options.html"));
+			}
+
+		}
+
+		checkCards();		
 	});
 
 
@@ -68,7 +91,7 @@
 
 	//$("div.deck-description p").hide();
 	//$("div.deck-description p:first").text("Hello DUDE!");
-	var jim;
+	//var jim;
 	//jim = $("table.listing-cards-tabular").html();
 	//alert($("table.listing-cards-tabular").html());
 	//$("div.deck-description p:first").html(jim);
@@ -76,7 +99,7 @@
 	//alert(jim);
 	//$("div.deck-description p:first").html(jim);
 
-	jim = $("table.listing-cards-tabular");
+	//jim = $("table.listing-cards-tabular");
 	//jim = $(jim).find("tr a");
 	//$("div.deck-description p:first").html(jim);
 
@@ -116,105 +139,116 @@
 
 	// })
 
+function checkCards()
+{
 
-$("tr").has("td.col-name a:not(.set-2)[class*='rarity']").each(function() {
+	$("tr").has("td.col-name a:not(.set-2)[class*='rarity']").each(function() {
 
-	//alert($(this).html());
-	//$("div.deck-description p:first").html($(this));
-	
+		//alert($(this).html());
+		//$("div.deck-description p:first").html($(this));
+		
 
-	//var row = $(this);
-	var cardname = $(this).find("a").text().trim();
-	//alert(cardname);
-	var numcards = $(this).find("td.col-name").text().trim();
-	var classes = $(this).find("[class*='rarity']").attr("class").split(' ');
-	var rarity;
-	numcards = numcards.charAt(numcards.length - 1);
-	//alert(numcards);
+		//var row = $(this);
+		var cardname = $(this).find("a").text().trim();
+		//alert(cardname);
+		var numcards = $(this).find("td.col-name").text().trim();
+		var classes = $(this).find("[class*='rarity']").attr("class").split(' ');
+		var rarity;
+		numcards = numcards.charAt(numcards.length - 1);
+		//alert(numcards);
 
-	//alert(classes);
+		//alert(classes);
 
-	for(var newclass in classes)
-	{
-		if(classes[newclass].indexOf("rarity") != -1)
+		for(var newclass in classes)
 		{
-			//alert(classes[newclass]);
-
-			switch(classes[newclass])
+			if(classes[newclass].indexOf("rarity") != -1)
 			{
-				case "rarity-1":
-					rarity = Rarity.COMMON;
-					break;
+				//alert(classes[newclass]);
 
-				case "rarity-3":
-					rarity = Rarity.RARE;
-					break;
+				switch(classes[newclass])
+				{
+					case "rarity-1":
+						rarity = Rarity.COMMON;
+						break;
 
-				case "rarity-4":
-					rarity = Rarity.EPIC;
-					break;
+					case "rarity-3":
+						rarity = Rarity.RARE;
+						break;
 
-				case "rarity-5":
-					rarity = Rarity.LEGENDARY;
-					break;
+					case "rarity-4":
+						rarity = Rarity.EPIC;
+						break;
+
+					case "rarity-5":
+						rarity = Rarity.LEGENDARY;
+						break;
+				}
+
+				//alert(rarity);
 			}
 
-			//alert(rarity);
 		}
 
-	}
-
-	var cardfound = false;
-	for(var cardindex = 0; cardindex < cards.length; cardindex++)
-	{
-		//alert("cardindex: " + cardindex);
-		//alert(cards[cardindex].name.toUpperCase());
-		//alert(cardname.toUpperCase());
-		if(cards[cardindex].name.toUpperCase() == cardname.toUpperCase())
+		var cardfound = false;
+		for(var cardindex = 0; cardindex < cards.length; cardindex++)
 		{
-			//alert(cardname);
-			var num = 0;
-
-			// for(var x=0; x<mycollection.length; x++)
-			// {
-			// 	if(cards[cardindex].cardpos == mycollection[x] )
-			// 	{
-			// 		num++;
-			// 		cardfound = true;
-			// 		//alert(num);
-			// 	}
-			// }
-
-			//alert(mycollection[cardindex]);
-			//alert(cardname);
-
-			if(typeof mycollection[cardindex] !== "undefined")
+			//alert("cardindex: " + cardindex);
+			//alert(cards[cardindex].name.toUpperCase());
+			//alert(cardname.toUpperCase());
+			if(cards[cardindex].name.toUpperCase() == cardname.toUpperCase())
 			{
-				num = mycollection[cardindex];
-				cardfound = true;
-			}
+				//alert(cardname);
+				//alert(cards[cardindex].name);
 
-			if(num > 0 && num < numcards)
-			{
-				$(this).find("td.col-name").addClass("missing-secondary");
-				$(this).find("td.col-cost").addClass("missing-secondary");
-				//alert($(row).html());
-			}
+				var num = 0;
 
-			break;
+				// for(var x=0; x<mycollection.length; x++)
+				// {
+				// 	if(cards[cardindex].cardpos == mycollection[x] )
+				// 	{
+				// 		num++;
+				// 		cardfound = true;
+				// 		//alert(num);
+				// 	}
+				// }
+
+				//alert(mycollection[cardindex]);
+				//alert(cardname);
+
+				if(typeof mycollection[cardindex] !== "undefined")
+				{
+					num = mycollection[cardindex];
+
+					if(num > 0)
+					{
+						cardfound = true;
+					}
+				}
+
+				if(num > 0 && num < numcards)
+				{
+					$(this).find("td.col-name").addClass("missing-secondary");
+					$(this).find("td.col-cost").addClass("missing-secondary");
+					//alert($(row).html());
+				}
+
+				break;
+			}
 		}
-	}
 
-	if(cardfound == false)
-	{
-		$(this).find("td.col-name").addClass("missing-primary");
-		$(this).find("td.col-cost").addClass("missing-primary");		
-	}
-	//alert(name);
-	//alert(number);
-	//alert(rarity);
-	//$("div.deck-description p:first").html(this);
-})
+		if(cardfound == false)
+		{
+			//alert("hey hey hey!");
+			$(this).find("td.col-name").addClass("missing-primary");
+			$(this).find("td.col-cost").addClass("missing-primary");		
+		}
+		//alert(name);
+		//alert(number);
+		//alert(rarity);
+		//$("div.deck-description p:first").html(this);
+	});
+
+}
 
 
 
