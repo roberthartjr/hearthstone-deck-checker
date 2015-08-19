@@ -10,10 +10,20 @@ body {
 	background: red !important;
 }
 
-.missing-primary {
+.missing-primary2 {
 	background: #FF6666 !important;
+}
+
+.missing-secondary2 {
+	background: orange !important;	
+}
+
+.missing-primary {
+	background: pink !important;
+	opacity: .5 !important;
 }
 
 .missing-secondary {
 	background: orange !important;	
+	opacity: .5 !important;
 }

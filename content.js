@@ -221,27 +221,34 @@ function checkCards()
 
 					if(num > 0)
 					{
-						cardfound = true;
+						//cardfound = true;
+
+						if(num < numcards)
+						{
+							$(this).find("td.col-name").addClass("missing-secondary");
+							$(this).find("td.col-cost").addClass("missing-secondary");
+							//alert($(row).html());
+						}
+						else
+						{
+
+
+							$(this).find("td.col-name").addClass("missing-primary");
+							$(this).find("td.col-cost").addClass("missing-primary");	
+
+
+						}
+
 					}
 				}
 
-				if(num > 0 && num < numcards)
-				{
-					$(this).find("td.col-name").addClass("missing-secondary");
-					$(this).find("td.col-cost").addClass("missing-secondary");
-					//alert($(row).html());
-				}
+
 
 				break;
 			}
 		}
 
-		if(cardfound == false)
-		{
-			//alert("hey hey hey!");
-			$(this).find("td.col-name").addClass("missing-primary");
-			$(this).find("td.col-cost").addClass("missing-primary");		
-		}
+
 		//alert(name);
 		//alert(number);
 		//alert(rarity);
