@@ -142,7 +142,7 @@
 function checkCards()
 {
 
-	$("tr").has("td.col-name a:not(.set-2)[class*='rarity']").each(function() {
+	$("tr").has("td.col-name a[class*='rarity']").each(function() {
 
 		//alert($(this).html());
 		//$("div.deck-description p:first").html($(this));
@@ -153,43 +153,53 @@ function checkCards()
 		//alert(cardname);
 		var numcards = $(this).find("td.col-name").text().trim();
 		var classes = $(this).find("[class*='rarity']").attr("class").split(' ');
-		var rarity;
+		var rarity = 0;
 		numcards = numcards.charAt(numcards.length - 1);
+		var classindex = 0;
+		var setindex = 1;
 		//alert(numcards);
 
 		//alert(classes);
+		//alert(classes[setindex]);
 
-		for(var newclass in classes)
+		if(classes[setindex].indexOf("set-2") == -1)
 		{
-			if(classes[newclass].indexOf("rarity") != -1)
+			//alert(classes[newclass]);
+
+			switch(classes[classindex])
 			{
-				//alert(classes[newclass]);
+				case "rarity-1":
+					rarity = Rarity.COMMON;
+					break;
 
-				switch(classes[newclass])
-				{
-					case "rarity-1":
-						rarity = Rarity.COMMON;
-						break;
+				case "rarity-3":
+					rarity = Rarity.RARE;
+					break;
 
-					case "rarity-3":
-						rarity = Rarity.RARE;
-						break;
+				case "rarity-4":
+					rarity = Rarity.EPIC;
+					break;
 
-					case "rarity-4":
-						rarity = Rarity.EPIC;
-						break;
-
-					case "rarity-5":
-						rarity = Rarity.LEGENDARY;
-						break;
-				}
-
-				//alert(rarity);
+				case "rarity-5":
+					rarity = Rarity.LEGENDARY;
+					break;
 			}
+
+			//alert(rarity);
+		}
+		else
+		{
+			//alert(classes[setindex]);
+			// this is a basic card that every collection has
+			//$(this).find("td.col-name").addClass("missing-primary");
+			//$(this).find("td.col-cost").addClass("missing-primary");
+			highlightCard(this, "highlight-all");
+			return 1;
 
 		}
 
-		var cardfound = false;
+
+		//var cardfound = false;
 		for(var cardindex = 0; cardindex < cards.length; cardindex++)
 		{
 			//alert("cardindex: " + cardindex);
@@ -199,7 +209,6 @@ function checkCards()
 			{
 				//alert(cardname);
 				//alert(cards[cardindex].name);
-
 				var num = 0;
 
 				// for(var x=0; x<mycollection.length; x++)
@@ -225,16 +234,18 @@ function checkCards()
 
 						if(num < numcards)
 						{
-							$(this).find("td.col-name").addClass("missing-secondary");
-							$(this).find("td.col-cost").addClass("missing-secondary");
+							//$(this).find("td.col-name").addClass("missing-secondary");
+							//$(this).find("td.col-cost").addClass("missing-secondary");
+							highlightCard(this, "highlight-partial");
 							//alert($(row).html());
 						}
 						else
 						{
 
 
-							$(this).find("td.col-name").addClass("missing-primary");
-							$(this).find("td.col-cost").addClass("missing-primary");	
+							//$(this).find("td.col-name").addClass("missing-primary");
+							//$(this).find("td.col-cost").addClass("missing-primary");
+							highlightCard(this, "highlight-all");
 
 
 						}
@@ -243,9 +254,9 @@ function checkCards()
 				}
 
 
-
 				break;
 			}
+
 		}
 
 
@@ -255,6 +266,12 @@ function checkCards()
 		//$("div.deck-description p:first").html(this);
 	});
 
+}
+
+function highlightCard(card, cname)
+{
+	$(card).find("td.col-name").addClass(cname);
+	$(card).find("td.col-cost").addClass(cname);		
 }
 
 

@@ -27,3 +27,13 @@ body {
 	background: orange !important;	
 	opacity: .5 !important;
 }
+
+.highlight-all {
+	background: pink !important;
+	opacity: .5 !important;
+}
+
+.highlight-partial {
+	background: orange !important;	
+	opacity: .5 !important;
+}

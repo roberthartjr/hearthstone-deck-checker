@@ -30,7 +30,7 @@ $(document).ready(function() {
 					for(var x=0; x<cards.length; x++)
 					{
 						mycollection.push(0);
-						console.log("error");
+						//console.log("error");
 
 						chrome.storage.local.set({"hscollection": mycollection}, function() {
 							console.log("mycollection created and saved");
@@ -71,9 +71,11 @@ function createCollection()
 	var cardclass = $("#cardclasses").val();
 	var tempcards;
 	var newview = "";
+	var cardview = "";
+	var rarityview = "";
 	var maxcards;
 	var cardcount;
-
+	var cardfound = false;
 	console.log("card class: " + cardclass);
 
 	if(cardclass == 0)
@@ -88,13 +90,16 @@ function createCollection()
 
 	for(var rarity in Rarity)
 	{
-		newview += "<h1>" + toTitleCase(rarity) + "</h1>";
+		cardfound = false;
+		cardview = "";
+		rarityview = "<h1>" + toTitleCase(rarity) + "</h1>";
 
 		for(var x=0; x < cards.length; x++)
 		{
 			if(cards[x].set == cardset && cards[x].playerClass == cardclass && cards[x].rarity == Rarity[rarity])
 			{
-				newview += "<div style='width:600px;'><div style='float:left;'><select name='numcards[" + cardcount + "]' data-cardindex='" + x + "'>";
+				cardfound = true;
+				cardview += "<div style='width:600px;'><div style='float:left;'><select name='numcards[" + cardcount + "]' data-cardindex='" + x + "'>";
 				cardcount++;
 				
 				if(rarity == "LEGENDARY")
@@ -110,23 +115,28 @@ function createCollection()
 				{
 					if(mycollection[x] == y)
 					{
-						newview += "<option selected>" + y + "</option>";
+						cardview += "<option selected>" + y + "</option>";
 					}
 					else
 					{
-						newview += "<option>" + y + "</option>";
+						cardview += "<option>" + y + "</option>";
 					}
 				}
 
 
-				newview += "</select></div>";
+				cardview += "</select></div>";
 
-				newview += "<div style='float:left;'>" + cards[x].name + "</div><div style='clear:both;'></div></div><br/>";
+				cardview += "<div style='float:left;'>" + cards[x].name + "</div><div style='clear:both;'></div></div><br/>";
 
 				// $("select[name='numcards[" + x + "]']").change(function() {
 				// 	console.log("numcards[" + x + "] changed");
 				// });
 			}
+		}
+
+		if(cardfound == true)
+		{
+			newview += rarityview + cardview;
 		}
 		
 	}
