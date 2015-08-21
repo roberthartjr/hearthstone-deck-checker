@@ -1,2 +1,2 @@
 # hearthstone-deck-checker
-Highlights the cards on Hearthpwn that you have in your collection
+A Chrome extension that highlights the cards on Hearthpwn that you have in your Hearthstone collection
