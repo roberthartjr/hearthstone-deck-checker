@@ -1,13 +1,12 @@
 (function() {
 	'use strict';
 
-	// var cards = [{name:"Druid of the Claw", num:2, index:0}];
-	// cards.push({name:"Ancient of Lore", num:1, index:1});
-	var mycollection = [];
-	//mycollection = [{num:2}, {num:1}];
+	var mycollection = [];		// holds the card collection
+	var cards;					// all possible cards for the collection
 
-	var cards;
-	var myurl = chrome.extension.getURL("carddata2.json");
+	var myurl = chrome.extension.getURL("carddata.json");	
+
+	// load all possible cards for a collection
 	$.ajax({
 		url: myurl,
 		datatype: "json",
@@ -18,52 +17,33 @@
 		}
 	});
 
-	//alert(cards);
 
-	//alert("Rarity:" + Rarity.COMMON);
-	//var savedstuff = [];
-
-	// for(var x=0; x<1000; x++)
-	// {
-	// 	savedstuff.push(x);
-	// }
-
-	// chrome.storage.local.set({"hscollection": savedstuff}, function() {
-	// 	alert("saved");
-	// } );
-
-	//localStorage.setItem("hscollection", JSON.stringify(savedstuff));
-
-	//chrome.storage.local.remove("hscollection");
-
-	//var savedstuff = "";
-
+	// check if a collection already exists
 	chrome.storage.local.get("hscollection", function(data) {
 		
-		//savedstuff = data;
-		//alert(savedstuff);
 
+		// collection exists so load it
 		if(typeof data.hscollection !== "undefined")
 		{
 			mycollection = data.hscollection;
-			//alert(mycollection);
-			//alert("savedstuff");
-			//alert(savedstuff);
 		}
+		// collection does not exist
 		else
 		{
 
+			// init the collection
 			for(var x=0; x<cards.length; x++)
 			{
 				mycollection.push(0);
-				//console.log("error");
-
-				chrome.storage.local.set({"hscollection": mycollection}, function() {
-					console.log("mycollection created and saved");
-				});
 			}
 
+			chrome.storage.local.set({"hscollection": mycollection}, function() {
+				console.log("mycollection created and saved");
+			});
 
+
+
+			// open options page so user can start entering collection
 			if(chrome.runtime.openOptionsPage)
 			{
 				chrome.runtime.openOptionsPage();
@@ -79,93 +59,31 @@
 	});
 
 
-	//alert(savedstuff);
 
-	// var savedstuff = JSON.parse(localStorage.getItem("hscollection"));
-	// alert(savedstuff);
-
-
-	//console.log(firstHref);
-
-	//alert("joe");
-
-	//$("div.deck-description p").hide();
-	//$("div.deck-description p:first").text("Hello DUDE!");
-	//var jim;
-	//jim = $("table.listing-cards-tabular").html();
-	//alert($("table.listing-cards-tabular").html());
-	//$("div.deck-description p:first").html(jim);
-	//jim = $(jim).find("p").html();
-	//alert(jim);
-	//$("div.deck-description p:first").html(jim);
-
-	//jim = $("table.listing-cards-tabular");
-	//jim = $(jim).find("tr a");
-	//$("div.deck-description p:first").html(jim);
-
-
-	// $(jim).find("td.col-name, td.col-cost").each(function() {
-
-	// 	alert($(this).html());
-	// 	$(this).addClass("cardsx");
-	// 	var cardrow = $(this).html().trim();
-
-	// 	//alert($(cardrow).find("a").text());
-	// 	var name = $(cardrow).find("a").text().trim();
-	// 	alert(name);
-	// 	//alert(cardrow);
-
-	// 	var result = cardrow.lastIndexOf("×");
-	// 	//console.log(cardrow + "br/");
-
-		
-	// 	var number = cardrow.charAt(result + 2);
-	// 	alert(number);
-	
-
-	//});
-
-
-	// $(jim).find("tr.even, tr.odd").each(function() {
-
-	// 	var row = $(this);
-
-	// 	var name = $(row).find("a:not(.set-2)").text().trim();
-	// 	var number = $(row).html().charAt(($(row).html().lastIndexOf("×")) + 2);
-	// 	alert(name);
-	// 	alert(number);
-	// 	$(row).find("td.col-name").addClass("missing-primary");
-	// 	$(row).find("td.col-cost").addClass("missing-primary");
-
-	// })
-
+// checks if the cards in the deck at hearthpwn are in our collection and if so highlight them
+// blue highlight means we have all copies of the card
+// orange highlight means we have one copy of the card
 function checkCards()
 {
 
+	// cycles through each card in the current deck, gets the card's name, set, copies of card, class, and rarity
 	$("tr").has("td.col-name a[class*='rarity']").each(function() {
 
-		//alert($(this).html());
-		//$("div.deck-description p:first").html($(this));
-		
+	
 
-		//var row = $(this);
 		var cardname = $(this).find("a").text().trim();
-		//alert(cardname);
 		var numcards = $(this).find("td.col-name").text().trim();
 		var classes = $(this).find("[class*='rarity']").attr("class").split(' ');
 		var rarity = 0;
 		numcards = numcards.charAt(numcards.length - 1);
 		var classindex = 0;
 		var setindex = 1;
-		//alert(numcards);
 
-		//alert(classes);
-		//alert(classes[setindex]);
 
+		// if the card is not one of the free cards
 		if(classes[setindex].indexOf("set-2") == -1)
 		{
-			//alert(classes[newclass]);
-
+			// get rarity of card
 			switch(classes[classindex])
 			{
 				case "rarity-1":
@@ -185,74 +103,46 @@ function checkCards()
 					break;
 			}
 
-			//alert(rarity);
 		}
+		// card is a free one that every collection has, so hightlight it
 		else
 		{
-			//alert(classes[setindex]);
-			// this is a basic card that every collection has
-			//$(this).find("td.col-name").addClass("missing-primary");
-			//$(this).find("td.col-cost").addClass("missing-primary");
 			highlightCard(this, "highlight-all");
 			return 1;
-
 		}
 
 
-		//var cardfound = false;
+
+		// find the card in the collection
 		for(var cardindex = 0; cardindex < cards.length; cardindex++)
 		{
-			//alert("cardindex: " + cardindex);
-			//alert(cards[cardindex].name.toUpperCase());
-			//alert(cardname.toUpperCase());
+
 			if(cards[cardindex].name.toUpperCase() == cardname.toUpperCase())
 			{
-				//alert(cardname);
-				//alert(cards[cardindex].name);
+
 				var num = 0;
 
-				// for(var x=0; x<mycollection.length; x++)
-				// {
-				// 	if(cards[cardindex].cardpos == mycollection[x] )
-				// 	{
-				// 		num++;
-				// 		cardfound = true;
-				// 		//alert(num);
-				// 	}
-				// }
-
-				//alert(mycollection[cardindex]);
-				//alert(cardname);
-
+				// get how many copies the user has in their collection
 				if(typeof mycollection[cardindex] !== "undefined")
 				{
 					num = mycollection[cardindex];
 
+					// if they at least have one copy
 					if(num > 0)
 					{
-						//cardfound = true;
-
+						// only has one copy of the card in their collection so highlight it in orange
 						if(num < numcards)
 						{
-							//$(this).find("td.col-name").addClass("missing-secondary");
-							//$(this).find("td.col-cost").addClass("missing-secondary");
 							highlightCard(this, "highlight-partial");
-							//alert($(row).html());
 						}
+						// has all copies of the card in their collection so highlight it in blue
 						else
 						{
-
-
-							//$(this).find("td.col-name").addClass("missing-primary");
-							//$(this).find("td.col-cost").addClass("missing-primary");
 							highlightCard(this, "highlight-all");
-
-
 						}
 
 					}
 				}
-
 
 				break;
 			}
@@ -260,14 +150,11 @@ function checkCards()
 		}
 
 
-		//alert(name);
-		//alert(number);
-		//alert(rarity);
-		//$("div.deck-description p:first").html(this);
 	});
 
 }
 
+// highlights the card in the deck on the hearthpwn site
 function highlightCard(card, cname)
 {
 	$(card).find("td.col-name").addClass(cname);

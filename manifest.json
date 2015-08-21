@@ -1,12 +1,12 @@
 {
 		"manifest_version": 2,
-		"name": "Hearthpwn Collection",
+		"name": "Hearthstone Deck Checker",
 		"version": "0.1.0",
-		"description": "Hearthpwn collection checker",
+		"description": "Highlights the cards on Hearthpwn that you have in your collection",
 		"author": "Robert Hart",
 		"content_scripts": [
 			{
-				"matches": ["*://*/*"],
+				"matches": ["http://www.hearthpwn.com/decks/*"],
 				"js": ["jquery-2.1.4.js", "functions.js","content.js"],
 				"css": ["content.css"],
 				"run_at": "document_end"

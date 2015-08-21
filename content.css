@@ -1,36 +1,6 @@
-body {
-	background: hotpink;
-}
-
-.listing-cards-tabular {
-	background: hotpink;
-}
-
-.cardsx {
-	background: red !important;
-}
-
-.missing-primary2 {
-	background: #FF6666 !important;
-}
-
-.missing-secondary2 {
-	background: orange !important;	
-}
-
-.missing-primary {
-	background: pink !important;
-	opacity: .5 !important;
-}
-
-.missing-secondary {
-	background: orange !important;	
-	opacity: .5 !important;
-}
-
 .highlight-all {
-	background: pink !important;
-	opacity: .5 !important;
+	background: aqua !important;
+	opacity: .7 !important;
 }
 
 .highlight-partial {

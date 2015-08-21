@@ -1,9 +1,12 @@
-var cards;
-var mycollection = [];
+
+var cards;						// all possible cards for the collection
+var mycollection = [];			// holds the card collection
 
 $(document).ready(function() {
 
-	var myurl = chrome.extension.getURL("carddata2.json");
+	var myurl = chrome.extension.getURL("carddata.json");
+
+	// load all possible cards for a collection
 	$.ajax({
 		url: myurl,
 		datatype: "json",
@@ -13,40 +16,35 @@ $(document).ready(function() {
 			//alert(cards);
 
 
-
+			// check if a collection already exists
 			chrome.storage.local.get("hscollection", function(data) {
 				
-				console.log(data);
-				console.log(chrome.runtime.lastError);
-
+				// collection exists so load it
 				if(typeof data.hscollection !== "undefined")
 				{
 					mycollection = data.hscollection;
-					console.log("no error");
-					//alert("savedstuff");
 				}
+				// collection does not yet exist
 				else
 				{
+					// init the collection
 					for(var x=0; x<cards.length; x++)
 					{
 						mycollection.push(0);
-						//console.log("error");
-
-						chrome.storage.local.set({"hscollection": mycollection}, function() {
-							console.log("mycollection created and saved");
-						});
 					}
+
+					chrome.storage.local.set({"hscollection": mycollection}, function() {
+					});
+					
 				}
 
-
+				// if card set is changed show the collection for that set
 				$("#cardsets").change(function() {
-					console.log($("#cardsets").val());
-					$("#collectionview").html("<h1>Card collection goes here</h1>");
 					createCollection();
 				});
 
+				// if card class is changed show the collection for that class
 				$("#cardclasses").change(function() {
-					console.log($("#cardclasses").val());
 					createCollection();
 				});
 			});	
@@ -58,50 +56,50 @@ $(document).ready(function() {
 		}
 	});	
 
-	//chrome.storage.local.remove("hscollection");
-
-
 
 
 });
 
+// creates the cards in collection based on the set and class
 function createCollection()
 {
-	var cardset = $("#cardsets").val();
-	var cardclass = $("#cardclasses").val();
-	var tempcards;
-	var newview = "";
-	var cardview = "";
-	var rarityview = "";
-	var maxcards;
-	var cardcount;
-	var cardfound = false;
-	console.log("card class: " + cardclass);
+	var cardset = $("#cardsets").val();					// the card set to get the cards from
+	var cardclass = $("#cardclasses").val();			// the card class to get the cards from
+	var newview = "";									// the collection view that will be created
+	var cardview = "";									// holds the elements for each card
+	var rarityview = "";								// the rarity heading
+	var maxcards;										// max cards for that rarity					
+	var cardcount;										// total number of cards for the view
+	var cardfound = false;								// a flag that checks if there are any cards for that rarity
 
+	// if no class is selected exit function
 	if(cardclass == 0)
 	{
 		$("#collectionview").html("");
 		return;
 	}
 
-	console.log("Rarity length: " + Rarity.COMMON);
-
 	cardcount = 0;
 
+	// loop through all possible rarities of cards
 	for(var rarity in Rarity)
 	{
 		cardfound = false;
 		cardview = "";
 		rarityview = "<h1>" + toTitleCase(rarity) + "</h1>";
 
+		// cycle through all the cards for the current rarity
 		for(var x=0; x < cards.length; x++)
 		{
+			// if this cards is the current set, class and, rarity
 			if(cards[x].set == cardset && cards[x].playerClass == cardclass && cards[x].rarity == Rarity[rarity])
 			{
+				// start creating the collection view
 				cardfound = true;
 				cardview += "<div style='width:600px;'><div style='float:left;'><select name='numcards[" + cardcount + "]' data-cardindex='" + x + "'>";
 				cardcount++;
 				
+				// if the card is legendary then their can only be one of them, otherwise 2
 				if(rarity == "LEGENDARY")
 				{
 					maxcards = 1;
@@ -111,6 +109,7 @@ function createCollection()
 					maxcards = 2;
 				}
 
+				// create a select element that lets you choose how many of the card you have
 				for(var y=0; y<= maxcards; y++)
 				{
 					if(mycollection[x] == y)
@@ -134,6 +133,7 @@ function createCollection()
 			}
 		}
 
+		// if there is at least one card for this rarity then show it
 		if(cardfound == true)
 		{
 			newview += rarityview + cardview;
@@ -141,57 +141,14 @@ function createCollection()
 		
 	}
 
-	newview += "<br/><br/><div><input type='button' id='savebutton' value='Save' /></div>"
+	// add a save button
+	newview += "<br/><br/><div><input type='button' id='savebutton' value='Save' /></div><div id='save_result'></div>"
 
-	//console.log("Cardcount is " + cardcount);
-
-	//console.log("$(\"select[name='numcards[" + 0 + "]'\").change(function() {" +  "	console.log('jimmy crack corn'); " + "});");
-
-	//var jimcrack = "<script>$(\"select[name='numcards[" + 0 + "]'\").change(function() {" +  "	console.log('jimmy crack corn'); " + "});</script>";
-
+	// inject the collection view
 	$("#collectionview").html(newview);
 
-	// for(var ty=0; ty<5; ty++)
-	// {
-	// 	var jimbo = document.getElementsByName("numcards[" + ty + "]");
-	// 	jimbo[0].addEventListener("change", function() {
-	// 		updateCard(ty);
-	// 	});
 
-	// 	// jimbo[0].onchange = function() {
-	// 	// console.log("Jimbo is a dimbo" + " " + jimbo[0].name);
-	// 	// };
-	// }
-
-	// var jimbo = document.getElementsByName("numcards[]");
-	// console.log(jimbo);
-
-	//$("#collectionview").append(jimcrack);
-
-	// var jimbo = 3;
-
-	// for(jimbo=0; jimbo<5; jimbo++)
-	// {
-	// 	$("select[name='numcards[" + jimbo + "]'").change(function() {	console.log('jimmy crack corn ' + jimbo); });
-	// }
-
-
-	//$("select[name='numcards[0]'").change(function() {	console.log('jimmy crack corn'); });
-	// for(var f=0; f<cardcount; f++)
-	// {
-	// 	$("select[name='numcards[" + f + "]']").change(function() {
-	// 		console.log("cardcount no." + f + " changed.");
-	// 	});
-	// }
-
-	// $("select[name='numcards[0]']").change(function() {
-	// 	console.log("select numcards[0] changed");
-	// })
-
-	// $("select[name='numcards[1]']").change(function() {
-	// 	console.log("select numcards[1] changed");
-	// })	
-
+	// add a listener for each card that is called when the number of copies of the card is changed
 	for(var x=0; x<cardcount; x++)
 	{
 		$("select[name='numcards[" + x + "]']").change(function() {
@@ -199,9 +156,10 @@ function createCollection()
 		});
 	}
 
+	// saves the collection when the save button is clicked
 	$("#savebutton").click(function() {
 		chrome.storage.local.set({"hscollection": mycollection}, function () {
-			console.log("saved!");
+			$("#save_result").html("Collection saved!");
 		});
 	});
 
@@ -209,15 +167,9 @@ function createCollection()
 	
 }
 
+// update the number of cards in the collection
 function updateCard(sel)
 {
-	console.log("Cardnum: " + sel);
-	//var marty = $("select[name='numcards[" + jimlo + "]']").data("cardindex").text();
 	var cardindex = $(sel).data("cardindex");
-	console.log("cardindex: " + cardindex);
-
 	mycollection[cardindex] = parseInt($(sel).val());
-	console.log(mycollection);
-	//mycollection[cardnum] = $("select[name='numcards[" + cardnum + "]']").val();
-	//console.log("Mycollection  " + cardnum + " = " + mycollection[cardnum]);
 }
